@@ -16,8 +16,12 @@
         this._width = canvas.width;
         this._height = canvas.height;
 
-        this._max = 1;
+        this._max = Number.MIN_SAFE_INTEGER;
+	this._min = Number.MAX_SAFE_INTEGER; 
+
         this._data = [];
+
+	this._redrawFinish = undefined; // callback
     }
     
     simpleidw.prototype = {
@@ -47,6 +51,16 @@
             this._max = max;
             return this;
         },
+
+	min: function (min) {
+	    this._min = min;
+	    return this;
+	},
+
+	redrawFinish: function(callback){
+	    this._redrawFinish = callback;
+	    return this;
+	},
 
         add: function (point) {
             this._data.push(point);
@@ -105,11 +119,11 @@
 
             for (var i = 0, len = this._data.length, p; i < len; i++) {
                 var p = this._data[i];
-                var j = Math.round((p[2] / this._max)*255)*4;
+                var j = Math.round(((p[2] - this._min)/(this._max - this._min))*255)*4;
                 ctx.fillStyle = 'rgba('+grad[j]+','+grad[j+1]+','+grad[j+2]+','+opacity+')';
                 ctx.fillRect(p[0] - this._r,p[1] - this._r,this._r,this._r);     
             }
-
+	    typeof this._redrawFinish == "function" && this._redrawFinish();
             return this;
         }
     },
@@ -123,13 +137,11 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
         maxZoom: 18,
         cellSize: 1,
         exp: 2,
-        max: 100
+        redrawFinsih: callback 
     },
     */
     initialize: function (latlngs, options) {
         this._latlngs = latlngs;
-                console.log(latlngs);
-
         L.setOptions(this, options);
     },
 
@@ -191,6 +203,14 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
         return this;
     },
 
+    getMax: function() {
+	return this._idw._max
+    },
+
+    getMin: function() {
+    	return this._idw._min
+    },
+
     _initCanvas: function () {
         var canvas = this._canvas = L.DomUtil.create('canvas', 'leaflet-idwmap-layer leaflet-layer');
 
@@ -210,6 +230,8 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
 
     _updateOptions: function () {
         this._idw.cellSize(this.options.cellSize || this._idw.defaultCellSize);
+
+	this._idw.redrawFinish(this.options.redrawFinish);
 
         if (this.options.gradient) {
             this._idw.gradient(this.options.gradient);
@@ -239,8 +261,6 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
         if (!this._map) {
             return;
         }
-
-        console.log(this._idw._r);
         
         var data = [],
             r = this._idw._r,
@@ -261,9 +281,6 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
             offsetX = 0, //panePos.x % cellSize,
             offsetY = 0, // panePos.y % cellSize,
             i, len, p, cell, x, y, j, len2, k;
-            
-            console.log(nCellX);
-            console.log(nCellY);
             
         console.time('process');
         
@@ -291,16 +308,18 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
                             
                 }
                 
-                interpolVal = numerator/denominator;
+                const interpolVal = numerator/denominator;
                 
                 cell = [j*r, i*r, interpolVal];              
                 
-                if (cell) {
+                if (cell && !isNaN(interpolVal)) {
                     data.push([
                         Math.round(cell[0]),
                         Math.round(cell[1]),
-                        Math.min(cell[2], max)
+                        cell[2]
                     ]);
+		    this._idw.min(Math.min(this._idw._min, cell[2]));
+		    this._idw.max(Math.max(this._idw._max, cell[2]));
                 }
             }
         }
