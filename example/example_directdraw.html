@@ -31,8 +31,9 @@
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    var callback = function(){
-	    console.log('callback');
+    var callback = function(min, max){
+	    console.log(`min: ${min}`);
+	    console.log(`max: ${max}`);
     }
 
     var idw = L.idwLayer(addressPoints,{
@@ -42,5 +43,6 @@
             exp: 3,
 	    redrawFinish: callback
         }).addTo(map);
+
     </script>
 </html>

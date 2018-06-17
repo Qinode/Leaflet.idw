@@ -123,7 +123,7 @@
                 ctx.fillStyle = 'rgba('+grad[j]+','+grad[j+1]+','+grad[j+2]+','+opacity+')';
                 ctx.fillRect(p[0] - this._r,p[1] - this._r,this._r,this._r);     
             }
-	    typeof this._redrawFinish == "function" && this._redrawFinish();
+	    typeof this._redrawFinish == "function" && this._redrawFinish(this._min, this._max);
             return this;
         }
     },
