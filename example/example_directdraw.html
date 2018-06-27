@@ -56,6 +56,10 @@
     displayValue: displayValue
   }).addTo(map);
 
+  displayValue.min = 500;
+  displayValue.max = 700;
+  setTimeout(function() {idw.setOptions(displayValue);}, 5000)
+
   console.log(idw);
 </script>
 
