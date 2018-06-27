@@ -316,7 +316,7 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
       panePos = this._map._getMapPanePos(),
       offsetX = 0, //panePos.x % cellSize,
       offsetY = 0, // panePos.y % cellSize,
-      i, len, p, cell, x, y, j, len2, k;
+      i, len, p, cell, x, y, j, len2, len3, k;
 
     this._idw.min(Number.MAX_SAFE_INTEGER);
     this._idw.max(Number.MIN_SAFE_INTEGER);
