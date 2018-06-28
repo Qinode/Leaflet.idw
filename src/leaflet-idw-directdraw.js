@@ -268,9 +268,9 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
       this._idw.redrawFinish(this.options.redrawFinish);
     }
 
-    if (this.options.displayValue){
-      this._idw.displayValue(this.options.displayValue);
-    }
+    // if (this.options.displayValue){
+    this._idw.displayValue(this.options.displayValue);
+    // }
 
     if (this.options.gradient) {
       this._idw.gradient(this.options.gradient);
