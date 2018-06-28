@@ -325,29 +325,41 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
       //grid[i] = [];
       for (j = 0, len2 = nCellX; j < len2; j++) {
 
+        if (i == 58 && j == 25){
+          let dummy = 0;
+        }
+
         var x = i * r,
           y = j * r;
-        var numerator = 0,
-          denominator = 0;
 
-        for (k = 0, len3 = this._latlngs.length; k < len3; k++) {
+        let numerator = 0;
+        let denominator = 0;
+
+        let zeroDist = false;
+        let zeroDistVal = undefined;
+
+        for (let k = 0; k < this._latlngs.length; k++) {
 
           // Get distance between cell and point
           var p = this._map.latLngToContainerPoint(this._latlngs[k]);
           var cp = L.point((y - cellCen), (x - cellCen));
           var dist = cp.distanceTo(p);
+
+          if (dist == 0){
+            zeroDist = true;
+            zeroDistVal = this._latlngs[k].alt !== undefined ? this._latlngs[k].alt : this._latlngs[k][2]
+            break;
+          }
           var dist2 = Math.pow(dist, exp);
 
-          var val =
-            this._latlngs[k].alt !== undefined ? this._latlngs[k].alt :
-            this._latlngs[k][2] !== undefined ? +this._latlngs[k][2] : 1;
+          var val = this._latlngs[k].alt !== undefined ? this._latlngs[k].alt : this._latlngs[k][2]
 
           numerator += val / dist2;
           denominator += 1 / dist2;
 
         }
 
-        const interpolVal = numerator / denominator;
+        const interpolVal = zeroDist ? zeroDistVal : numerator / denominator;
 
         cell = [j * r, i * r, interpolVal];
 
@@ -359,6 +371,8 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
           ]);
           this._idw.min(Math.min(this._idw._min, cell[2]));
           this._idw.max(Math.max(this._idw._max, cell[2]));
+        } else {
+          console.log(`${i}, ${j}`);
         }
       }
     }
