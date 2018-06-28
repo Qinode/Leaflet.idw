@@ -296,6 +296,10 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
       return;
     }
 
+    if (this._latlngs.length === 0){
+      return;
+    }
+
     var data = [],
       r = this._idw._r,
       size = this._map.getSize(),
@@ -332,14 +336,14 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
           var cp = L.point((y - cellCen), (x - cellCen));
           var dist = cp.distanceTo(p);
 
-          if (dist == 0){
+          if (dist === 0){
             zeroDist = true;
-            zeroDistVal = this._latlngs[k].alt !== undefined ? this._latlngs[k].alt : this._latlngs[k][2]
+            zeroDistVal = this._latlngs[k].alt !== undefined ? this._latlngs[k].alt : this._latlngs[k][2];
             break;
           }
           var dist2 = Math.pow(dist, exp);
 
-          var val = this._latlngs[k].alt !== undefined ? this._latlngs[k].alt : this._latlngs[k][2]
+          var val = this._latlngs[k].alt !== undefined ? this._latlngs[k].alt : this._latlngs[k][2];
 
           numerator += val / dist2;
           denominator += 1 / dist2;

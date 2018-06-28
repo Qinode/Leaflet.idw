@@ -47,7 +47,8 @@
     max: 1000
   };
 
-  var idw = L.idwLayer(addressPoints, {
+  var data = addressPoints
+  var idw = L.idwLayer([], {
     opacity: 0.3,
     maxZoom: 18,
     cellSize: 10,
