@@ -145,7 +145,7 @@
             }
           }
 
-          var j = Math.round(((p[2] - min) / (max - min)) * 255) * 4;
+          var j = Math.round(((value - min) / (max - min)) * 255) * 4;
           ctx.fillStyle = 'rgba(' + grad[j] + ',' + grad[j + 1] + ',' + grad[j + 2] + ',' + opacity + ')';
           ctx.fillRect(p[0] - this._r, p[1] - this._r, this._r, this._r);
         }
@@ -268,9 +268,7 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
       this._idw.redrawFinish(this.options.redrawFinish);
     }
 
-    // if (this.options.displayValue){
     this._idw.displayValue(this.options.displayValue);
-    // }
 
     if (this.options.gradient) {
       this._idw.gradient(this.options.gradient);
@@ -321,7 +319,7 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
     this._idw.min(Number.MAX_SAFE_INTEGER);
     this._idw.max(Number.MIN_SAFE_INTEGER);
 
-    console.time('process');
+    // console.time('process');
 
     for (i = 0, len = nCellY; i < len; i++) {
       //grid[i] = [];
@@ -365,11 +363,11 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
       }
     }
 
-    console.timeEnd('process');
+    // console.timeEnd('process');
 
-    console.time('draw ' + data.length);
+    // console.time('draw ' + data.length);
     this._idw.data(data).draw(this.options.opacity);
-    console.timeEnd('draw ' + data.length);
+    // console.timeEnd('draw ' + data.length);
 
     this._frame = null;
   },

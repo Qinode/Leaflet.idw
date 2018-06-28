@@ -52,7 +52,7 @@
     maxZoom: 18,
     cellSize: 10,
     exp: 3,
-    redrawFinish: callback,
+    // redrawFinish: callback,
     displayValue: displayValue
   }).addTo(map);
   console.log(idw);
@@ -61,7 +61,7 @@
   displayValue.max = 700;
   setTimeout(function() {idw.setOptions({ displayValue: displayValue }); console.log(idw);}, 5000)
 
-  setTimeout(function() {idw.setOptions({ displayValue: undefined }); console.log(idw)}, 10000)
+  // setTimeout(function() {idw.setOptions({ displayValue: undefined }); console.log(idw)}, 10000)
 </script>
 
 </html>
