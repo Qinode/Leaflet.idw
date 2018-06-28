@@ -304,33 +304,20 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
         size.add([r, r])),
 
       exp = this.options.exp === undefined ? 1 : this.options.exp,
-      max = this.options.max === undefined ? 1 : this.options.max,
-      maxZoom = this.options.maxZoom === undefined ? this._map.getMaxZoom() : this.options.maxZoom,
-      v = 1,
       cellCen = r / 2,
-      grid = [],
       nCellX = Math.ceil((bounds.max.x - bounds.min.x) / r) + 1,
-      nCellY = Math.ceil((bounds.max.y - bounds.min.y) / r) + 1,
-      panePos = this._map._getMapPanePos(),
-      offsetX = 0, //panePos.x % cellSize,
-      offsetY = 0, // panePos.y % cellSize,
-      i, len, p, cell, x, y, j, len2, len3, k;
+      nCellY = Math.ceil((bounds.max.y - bounds.min.y) / r) + 1;
 
     this._idw.min(Number.MAX_SAFE_INTEGER);
     this._idw.max(Number.MIN_SAFE_INTEGER);
 
     // console.time('process');
 
-    for (i = 0, len = nCellY; i < len; i++) {
-      //grid[i] = [];
-      for (j = 0, len2 = nCellX; j < len2; j++) {
+    for (let i = 0; i < nCellY; i++) {
+      for (let j = 0; j < nCellX; j++) {
 
-        if (i == 58 && j == 25){
-          let dummy = 0;
-        }
-
-        var x = i * r,
-          y = j * r;
+        const x = i * r;
+        const y = j * r;
 
         let numerator = 0;
         let denominator = 0;
@@ -361,7 +348,7 @@ L.IdwLayer = (L.Layer ? L.Layer : L.Class).extend({
 
         const interpolVal = zeroDist ? zeroDistVal : numerator / denominator;
 
-        cell = [j * r, i * r, interpolVal];
+        const cell = [j * r, i * r, interpolVal];
 
         if (cell && !isNaN(interpolVal)) {
           data.push([
