@@ -37,7 +37,7 @@ To include the plugin, just use leaflet-idw.js from the src folder:
 Constructs an IDW layer given an array of points and an object with the following options:
 
     opacity - the opacity of the IDW layer
-    max - maximum point values, 1.0 by default
+    displayValue - object, {min: undefined, max: undefined}. By default, the colour displayed is relative to the maximum and minimum of the data. If the displayValue is set explicitly, value that is smaller or greater than minimum or maximum will be set to min and max respectively
     cellSize - height and width of each cell, 25 by default
     exp - exponent used for weighting, 1 by default
     gradient - color gradient config, e.g. {0.4: 'blue', 0.65: 'lime', 1: 'red'}
